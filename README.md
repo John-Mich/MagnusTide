@@ -42,7 +42,7 @@ To run the simulation locally, you need Python 3.8+ installed.
 
 1. Clone the repository:
 
-   git clone [https://github.com/yourusername/MagnusTide.git](https://github.com/yourusername/MagnusTide.git)
+   git clone [https://github.com/John-Mich/MagnusTide.git](https://github.com/yourusername/MagnusTide.git)
    cd MagnusTide
 
 
