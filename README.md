@@ -3,10 +3,6 @@ Submerged Twin-Magnus Hydrokinetic Turbine
 
 
 License: CERN-OHL
-(https://img.shields.io/badge/License-CERN%20OHL-blue.svg)
-
-Python
-(https://img.shields.io/badge/Python-3.8%2B-brightgreen)
 
 
 MagnusTide is an open-source, submerged Tension Leg Platform (TLP) hydrokinetic turbine designed for high-velocity tidal straits (>3.0 m/s). This repository contains the custom-built Kinematic & Fluid Dynamics Simulation Engine developed to validate the core mechanical and hydrodynamic concepts of the system.
