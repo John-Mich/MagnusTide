@@ -69,10 +69,15 @@ To run the simulation locally, you need Python 3.8+ installed.
 ## Roadmap
 
  [x] TRL 2: Theoretical formulation and kinematic geometry mapping.
+ 
  [x] TRL 3: Custom physics engine development & parametric optimization (Current Phase).
+ 
  [ ] TRL 4: Advanced Computational Fluid Dynamics (CFD) to map wake interference between twin rotors.
+ 
  [ ] TRL 5: Sub-scale prototype construction and tow-tank testing.
+ 
  [ ] TRL 6: Full-scale demonstration deployment at the Euripus Strait (Greece).
+ 
 
 
 ## Open Source Declaration
