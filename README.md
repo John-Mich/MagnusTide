@@ -43,10 +43,11 @@ To run the simulation locally, you need Python 3.8+ installed.
 1. Clone the repository:
 
    git clone [https://github.com/John-Mich/MagnusTide.git](https://github.com/yourusername/MagnusTide.git)
+
    cd MagnusTide
 
 
-2. Install dependencies:
+3. Install dependencies:
 The simulation relies on `numpy` for matrix calculations and `pyvista` for 3D rendering.
 
 pip install numpy pyvista
