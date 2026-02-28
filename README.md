@@ -1,5 +1,8 @@
 # MagnusTide
-Submerged Twin-Magnus Hydrokinetic Turbine
+Submerged Twin-Magnus Hydro kinetic Turbine
+
+
+<img width="1911" height="1080" alt="Στιγμιότυπο οθόνης 2026-02-26 011453" src="https://github.com/user-attachments/assets/6d9de545-a88d-4692-bc9d-c8f79eae8484" />
 
 
 License: CERN-OHL
