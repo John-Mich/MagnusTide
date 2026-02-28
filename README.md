@@ -48,15 +48,15 @@ To run the simulation locally, you need Python 3.8+ installed.
 
 
 3. Install dependencies:
-The simulation relies on `numpy` for matrix calculations and `pyvista` for 3D rendering.
+   The simulation relies on `numpy` for matrix calculations and `pyvista` for 3D rendering.
 
-pip install numpy pyvista
+   pip install numpy pyvista
 
 
 
 3. Run the physics engine:
 
-python magnustide_sim.py
+   python magnustide_sim.py
 
 
 
