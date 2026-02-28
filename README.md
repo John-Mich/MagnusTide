@@ -56,7 +56,7 @@ To run the simulation locally, you need Python 3.8+ installed.
 
 3. Run the physics engine:
 
-   python magnustide_sim.py
+   python twinsX.py
 
 
 
