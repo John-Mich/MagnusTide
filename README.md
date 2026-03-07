@@ -1,8 +1,11 @@
-<h1>
-<img src="logo.png" width="100" style="vertical-align:middle;"> MagnusTide
-</h1>
+<div style="display:flex; align-items:center; gap:12px;">
+  <img src="logo.png" width="100">
 
-*Submerged Twin-Magnus Hydrokinetic Turbine*
+  <div>
+    <h1 style="margin:0;">MagnusTide</h1>
+    <p style="margin:0;">Submerged Twin-Magnus Hydrokinetic Turbine</p>
+  </div>
+</div>
 
 <img width="1911" height="1080" alt="Στιγμιότυπο οθόνης 2026-02-26 011453" src="https://github.com/user-attachments/assets/6d9de545-a88d-4692-bc9d-c8f79eae8484" />
 
