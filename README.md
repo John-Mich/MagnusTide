@@ -1,4 +1,4 @@
-<img src="logo.png" width="100" align="left" style="margin-right:15px;">
+<img src="logo.png" width="120" align="left" style="margin-right:50px;">
 
 # MagnusTide
 Submerged Twin-Magnus Hydrokinetic Turbine
