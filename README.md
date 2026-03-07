@@ -3,7 +3,7 @@
 <h1 style="margin: 0; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px;">MagnusTide</h1>
 <p style="margin: 5px 0 0 0; font-size: 16px; color: #555;">Submerged Twin-Magnus Hydrokinetic Turbine</p>
 <p style="margin: 10px 0 15px 0;">
-<img src="https://img.shields.io/badge/license-MIT-green" alt="License">
+<img src="https://img.shields.io/badge/license-Apache-green" alt="License">
 <img src="https://img.shields.io/badge/status-Alpha-yellow" alt="Status">
 </p>
 <br clear="all" />
