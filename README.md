@@ -1,24 +1,22 @@
-<div style="display: flex; align-items: flex-start; gap: 20px; font-family: sans-serif;">
+<div>
+  <img src="logo.png" width="120" align="left" style="margin-right: 20px;" alt="MagnusTide Logo">
 
-  <div style="flex-shrink: 0;">
-    <img src="logo.png" width="120" alt="MagnusTide Logo" style="display: block;">
-  </div>
-
-  <div style="flex: 1;">
-    <h1 style="margin: 0; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px; line-height: 1.2;">
+  <div>
+    <h1 style="margin: 0; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px;">
       MagnusTide
     </h1>
     
-    <p style="margin: 8px 0 0 0; font-size: 16px; color: #555; font-weight: 500;">
+    <p style="margin: 5px 0 0 0; font-size: 16px; color: #555;">
       Submerged Twin-Magnus Hydrokinetic Turbine
     </p>
 
-    <div style="margin-top: 12px; display: flex; gap: 5px;">
+    <p style="margin: 10px 0 15px 0;">
       <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
       <img src="https://img.shields.io/badge/status-Alpha-yellow" alt="Status">
-    </div>
+    </p>
   </div>
-
+  
+  <br clear="all" />
 </div>
 
 <img width="1911" height="1080" alt="Στιγμιότυπο οθόνης 2026-02-26 011453" src="https://github.com/user-attachments/assets/6d9de545-a88d-4692-bc9d-c8f79eae8484" />
