@@ -1,16 +1,16 @@
-<table>
-  <tr>
-    <td valign="top" style="border: none;">
-      <img src="logo.png" width="120" alt="MagnusTide Logo">
+<table border="0" cellpadding="0" cellspacing="0" style="border: none; border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;">
+  <tr style="border: none;">
+    <td valign="top" style="border: none; padding: 0; margin: 0;">
+      <img src="logo.png" width="120" alt="MagnusTide Logo" style="display: block;">
     </td>
-    <td valign="top" style="border: none; padding-left: 20px;">
-      <h1 style="margin: 0; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px;">
+    <td valign="top" style="border: none; padding: 0 0 0 20px; margin: 0;">
+      <h1 style="margin: 0; border: none; border-bottom: 2px solid #000; display: inline-block; padding-bottom: 5px; line-height: 1;">
         MagnusTide
       </h1>
-      <p style="margin: 10px 0 0 0; font-size: 16px; color: #555;">
+      <p style="margin: 12px 0 0 0; font-size: 16px; color: #555; border: none;">
         Submerged Twin-Magnus Hydrokinetic Turbine
       </p>
-      <p style="margin: 10px 0 0 0;">
+      <p style="margin: 12px 0 0 0; border: none;">
         <img src="https://img.shields.io/badge/license-Apache-green" alt="License">
         <img src="https://img.shields.io/badge/status-Alpha-yellow" alt="Status">
       </p>
