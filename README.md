@@ -1,12 +1,21 @@
-<img src="logo.png" width="120" align="left">
+<div style="display:flex; align-items:flex-start; gap:15px;">
 
-<h1 style="margin-left:200px;">MagnusTide</h1>
+  <!-- Logo -->
+  <img src="logo.png" width="120">
 
-<p style="margin-left:200px;">
-Submerged Twin-Magnus Hydrokinetic Turbine
-</p>
+  <!-- Τίτλος + υπότιτλος -->
+  <div>
+    <h1 style="margin:0; border-bottom: 2px solid #000; display:inline-block; padding-bottom:5px;">
+      MagnusTide
+    </h1>
+    <p style="margin:5px 0 0 0; font-size:16px; color:#555;">
+      Submerged Twin-Magnus Hydrokinetic Turbine
+    </p>
 
-<br clear="left">
+    </p>
+  </div>
+
+</div>
 
 <img width="1911" height="1080" alt="Στιγμιότυπο οθόνης 2026-02-26 011453" src="https://github.com/user-attachments/assets/6d9de545-a88d-4692-bc9d-c8f79eae8484" />
 
