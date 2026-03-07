@@ -1,8 +1,8 @@
 <img src="logo.png" width="120" align="left">
 
-<h1 style="margin-left:100px;">MagnusTide</h1>
+<h1 style="margin-left:200px;">MagnusTide</h1>
 
-<p style="margin-left:100px;">
+<p style="margin-left:200px;">
 Submerged Twin-Magnus Hydrokinetic Turbine
 </p>
 
