@@ -1,18 +1,16 @@
 <div style="display:flex; align-items:flex-start; gap:15px;">
 
-  <!-- Logo -->
-  <img src="logo.png" width="120">
+  <!-- Logo αριστερά -->
+  <img src="logo.png" width="120" style="flex-shrink:0;">
 
-  <!-- Τίτλος + υπότιτλος -->
-  <div>
-    <h1 style="margin:0; border-bottom: 2px solid #000; display:inline-block; padding-bottom:5px;">
+  <!-- Τίτλος + υπότιτλος δεξιά του logo -->
+  <div style="display:flex; flex-direction:column;">
+    <span style="font-size:32px; font-weight:bold; border-bottom:2px solid #000; padding-bottom:5px;">
       MagnusTide
-    </h1>
-    <p style="margin:5px 0 0 0; font-size:16px; color:#555;">
+    </span>
+    <span style="font-size:16px; color:#555; margin-top:5px;">
       Submerged Twin-Magnus Hydrokinetic Turbine
-    </p>
-
-    </p>
+    </span>
   </div>
 
 </div>
