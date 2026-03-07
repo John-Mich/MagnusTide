@@ -1,6 +1,7 @@
 <div>
 <img src="logo.png" width="120" align="left" style="margin-right: 20px;" alt="MagnusTide Logo">
 <h3 style="margin: 0; padding-top: 15px;">MagnusTide</h3>
+<div style="color: #999; margin: -15px 0 10px 0; letter-spacing: 1px;">_________________________________________________</div>
 <p style="margin: 5px 0 0 0; font-size: 16px;">Submerged Twin-Magnus Hydrokinetic Turbine</p>
 <p style="margin: 10px 0 0 0;">
 <img src="https://img.shields.io/badge/license-Apache-green" alt="License">
