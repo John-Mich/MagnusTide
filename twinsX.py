@@ -6,6 +6,18 @@ import os
 from datetime import datetime
 import subprocess
 import json
+import multiprocessing
+
+try:
+    import pyi_splash
+    # Εδώ μπορείς να βάλεις και κείμενο να αλλάζει (π.χ. "Φόρτωση 3D μηχανής...")
+    pyi_splash.update_text('UI Loaded ...')
+    
+    # Κλείνει την εικόνα για να ανοίξει το κανονικό παράθυρο
+    pyi_splash.close()
+except ImportError:
+    # Αν τρέχεις το .py κανονικά (όχι το .exe), απλά το αγνοεί και προχωράει
+    pass
 
 # --- 0. CONFIG & MATH ENGINE ---
 pv.global_theme.allow_empty_mesh = True
@@ -1046,91 +1058,24 @@ class TwinMagnusHAWT_Physics:
     def export_cfd_gui(self, state):
         if not state: return  
         
-        import os
-        from datetime import datetime
-        import subprocess
-        import json
-        import sys
-
-        # Πιάνουμε την τρέχουσα ταχύτητα για τον υπολογισμό
         water_v = max(self.val_water_speed, 0.1)
-        
-        # --- ΤΟ ΝΕΟ ΕΞΥΠΝΟ ΠΑΡΑΘΥΡΟ ΔΙΑΛΟΓΟΥ ---
-        tk_code = f"""import tkinter as tk
-
-def run_app():
-    root = tk.Tk()
-    root.title("River-Monster: Smart CFD Exporter")
-    root.geometry("500x420")
-    root.attributes('-topmost', True)
-    root.configure(bg='#f0f0f0')
-    
-    water_speed = {water_v:.2f}
-    min_time = round(65.0 / water_speed, 1)
-    
-    dur_var = tk.DoubleVar(value=min_time)
-    fps_var = tk.DoubleVar(value=1.0)
-    size_var = tk.StringVar()
-    
-    def update_size(*args):
-        try:
-            d = float(dur_var.get())
-            f = float(fps_var.get())
-            total_frames = d * f
-            est_size_gb = total_frames * 1.0 + 2.0
-            size_var.set("Προβλεπόμενος Χώρος Δίσκου: " + str(round(est_size_gb, 1)) + " GB")
-        except:
-            size_var.set("Σφάλμα υπολογισμού")
-            
-    dur_var.trace_add('write', update_size)
-    fps_var.trace_add('write', update_size)
-    
-    tk.Label(root, text="Ταχύτητα Νερού: " + str(water_speed) + " m/s", font=('Arial', 12, 'bold'), bg='#f0f0f0').pack(pady=(15,5))
-    
-    tk.Label(root, text="Διάρκεια 6DoF Προσομοίωσης (sec):\\n(Προτείνεται " + str(min_time) + "s για πλήρη διέλευση)", font=('Arial', 10), bg='#f0f0f0').pack(pady=(10,2))
-    tk.Entry(root, textvariable=dur_var, font=('Arial', 14, 'bold'), justify='center', width=10).pack(pady=5)
-    
-    tk.Label(root, text="3D Γραφικά (Frames per Second):\\n(Πόσα στιγμιότυπα ανά δευτερόλεπτο να σώζει ο δίσκος)", font=('Arial', 10), bg='#f0f0f0').pack(pady=(15,2))
-    tk.Scale(root, variable=fps_var, from_=0.1, to=5.0, resolution=0.1, orient='horizontal', length=300, bg='#f0f0f0').pack(pady=5)
-    
-    tk.Label(root, textvariable=size_var, font=('Arial', 12, 'bold'), fg='red', bg='#f0f0f0').pack(pady=20)
-    
-    def on_submit():
-        print(str(dur_var.get()) + "|" + str(fps_var.get()))
-        root.destroy()
-        
-    def on_cancel():
-        print("CANCEL")
-        root.destroy()
-        
-    tk.Button(root, text="ΕΞΑΓΩΓΗ", command=on_submit, bg='lime', font=('Arial', 12, 'bold'), width=12).pack(side='left', padx=40, pady=10)
-    tk.Button(root, text="ΑΚΥΡΟ", command=on_cancel, bg='lightgray', font=('Arial', 12), width=12).pack(side='right', padx=40, pady=10)
-    
-    update_size()
-    root.mainloop()
-
-if __name__ == '__main__':
-    run_app()
-"""
-        
-        # Γράφουμε τον κώδικα σε ένα προσωρινό αρχείο (Ασφαλές για Windows)
-        temp_file = "temp_cfd_dialog.py"
-        with open(temp_file, "w", encoding="utf-8") as f:
-            f.write(tk_code)
 
         try:
             print("\n[CFD] Άνοιγμα παραθύρου ρυθμίσεων...")
-            result = subprocess.check_output([sys.executable, temp_file], text=True, stderr=subprocess.STDOUT).strip()
+            
+            # --- UNIVERSAL ROUTING ---
+            if getattr(sys, 'frozen', False):
+                # Αν τρέχει ως .exe
+                cmd = [sys.executable, '--run-cfd-dialog', str(water_v)]
+            else:
+                # Αν τρέχει ως .py 
+                cmd = [sys.executable, os.path.abspath(__file__), '--run-cfd-dialog', str(water_v)]
+                
+            result = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT).strip()
         except Exception as e:
             print("[CFD] Σφάλμα ανοίγματος διαλόγου:", e)
-            if os.path.exists(temp_file): os.remove(temp_file)
             return
-        finally:
-            # Διαγράφουμε το προσωρινό αρχείο αφού πάρουμε το αποτέλεσμα
-            if os.path.exists(temp_file):
-                os.remove(temp_file)
         
-        # Έλεγχος αν ο χρήστης πάτησε άκυρο
         if result == 'CANCEL' or '|' not in result: 
             print("[CFD] Η εξαγωγή ακυρώθηκε από τον χρήστη.")
             return
@@ -1288,9 +1233,9 @@ if __name__ == '__main__':
             Z_min, Z_max = self.sys_pos[2] - (self.Hub_R+self.Cyl_L) - 10.0, 10.0
             Nx, Ny, Nz = int((X_max-X_min)/1.5), int((Y_max-Y_min)/1.5), int((Z_max-Z_min)/1.5)
 
-            bm_dict = f"""/*--------------------------------*- C++ -*----------------------------------*\\\\
+            bm_dict = f"""/*--------------------------------*- C++ -*----------------------------------*\\
 FoamFile {{ version 2.0; format ascii; class dictionary; object blockMeshDict; }}
-\\\\*---------------------------------------------------------------------------*/
+\\*---------------------------------------------------------------------------*/
 scale   1;
 vertices (
     ({X_min} {Y_min} {Z_min}) ({X_max} {Y_min} {Z_min}) ({X_max} {Y_max} {Z_min}) ({X_min} {Y_max} {Z_min})
@@ -1307,10 +1252,9 @@ mergePatchPairs ();
 """
             with open(os.path.join(folder_name, "system", "blockMeshDict"), "w") as f: f.write(bm_dict)
 
-            # Στο controlDict προσθέτουμε το δυναμικό write_interval
-            control_dict_content = f"""/*--------------------------------*- C++ -*----------------------------------*\\\\
+            control_dict_content = f"""/*--------------------------------*- C++ -*----------------------------------*\\
 FoamFile {{ version 2.0; format ascii; class dictionary; object controlDict; }}
-\\\\*---------------------------------------------------------------------------*/
+\\*---------------------------------------------------------------------------*/
 application     overPimpleFoam;
 startFrom       startTime;
 startTime       0;
@@ -1343,9 +1287,9 @@ functions
 """
             with open(os.path.join(folder_name, "system", "controlDict"), "w") as f: f.write(control_dict_content)
 
-            dyn_mesh = f"""/*--------------------------------*- C++ -*----------------------------------*\\\\
+            dyn_mesh = f"""/*--------------------------------*- C++ -*----------------------------------*\\
 FoamFile {{ version 2.0; format ascii; class dictionary; object dynamicMeshDict; }}
-\\\\*---------------------------------------------------------------------------*/
+\\*---------------------------------------------------------------------------*/
 dynamicFvMesh   dynamicOversetFvMesh;
 motionSolverLibs ( "libfvMotionSolvers.so" "libsixDoFRigidBodyMotion.so" );
 motionSolver    solidBody;
@@ -1370,9 +1314,9 @@ solidBodyMotionFunctions
             dyn_mesh += "}\n"
             with open(os.path.join(folder_name, "constant", "dynamicMeshDict"), "w") as f: f.write(dyn_mesh)
 
-            u_str = f"""/*--------------------------------*- C++ -*----------------------------------*\\\\
+            u_str = f"""/*--------------------------------*- C++ -*----------------------------------*\\
 FoamFile {{ version 2.0; format ascii; class volVectorField; object U; }}
-\\\\*---------------------------------------------------------------------------*/
+\\*---------------------------------------------------------------------------*/
 dimensions      [0 1 -1 0 0 0 0];
 internalField   uniform (0 {self.val_water_speed:.3f} 0);
 boundaryField
@@ -1391,9 +1335,9 @@ boundaryField
 
             print("[5/6] Δημιουργία cellZones (topoSetDict)...")
             r_overset = self.Hub_R + self.Cyl_L + 2.0
-            topo_str = f"""/*--------------------------------*- C++ -*----------------------------------*\\\\
+            topo_str = f"""/*--------------------------------*- C++ -*----------------------------------*\\
 FoamFile {{ version 2.0; format ascii; class dictionary; object topoSetDict; }}
-\\\\*---------------------------------------------------------------------------*/
+\\*---------------------------------------------------------------------------*/
 actions (
     {{ name z_hubL; type cellSet; action new; source cylinderToCell; sourceInfo {{ p1 ({hub_L_global[0]-1} {hub_L_global[1]} {hub_L_global[2]}); p2 ({hub_L_global[0]+1} {hub_L_global[1]} {hub_L_global[2]}); radius {r_overset}; }} }}
     {{ name hub_left; type cellZoneSet; action new; source setToCellZone; sourceInfo {{ set z_hubL; }} }}
@@ -1424,7 +1368,7 @@ if [ -d "processor0" ]; then
     echo "======================================================"
     
     # Αλλάζει δυναμικά το controlDict για να ξεκινήσει από το latestTime
-    sed -i 's/startFrom[ \t]*startTime;/startFrom       latestTime;/g' system/controlDict
+    sed -i 's/startFrom[ \t]*startTime;/startFrom        latestTime;/g' system/controlDict
     
     echo "-> Συνέχιση Επίλυσης (overPimpleFoam σε $NCORES πυρήνες)..."
     # Το >> κάνει append (προσθήκη) στο υπάρχον run.log αντί να το διαγράψει
@@ -1459,7 +1403,7 @@ EOF
     rm -rf 0; cp -r 0.orig 0
     
     # Εξασφάλιση ότι ξεκινάει από το 0
-    sed -i 's/startFrom[ \t]*latestTime;/startFrom       startTime;/g' system/controlDict
+    sed -i 's/startFrom[ \t]*latestTime;/startFrom        startTime;/g' system/controlDict
     
     decomposePar -force > log.decomposePar 2>&1
 
@@ -1490,10 +1434,18 @@ echo "ΕΠΙΤΥΧΙΑ! Άνοιξε το results.foam στο ParaView για ν
     def load_state_gui(self, state):
         if not state: return
         
-        tk_code = """import tkinter as tk\nfrom tkinter import filedialog\nroot = tk.Tk()\nroot.withdraw()\nroot.attributes('-topmost', True)\nfile_path = filedialog.askopenfilename(title="Επιλογή State JSON", filetypes=[("JSON files", "*.json")])\nprint(file_path if file_path else 'CANCEL')"""
         try:
             print("\n[LOAD] Αναμονή για επιλογή αρχείου JSON...")
-            result = subprocess.check_output([sys.executable, "-c", tk_code], text=True, stderr=subprocess.STDOUT).strip()
+            
+            # --- UNIVERSAL ROUTING ---
+            if getattr(sys, 'frozen', False):
+                # Αν τρέχει ως .exe
+                cmd = [sys.executable, '--run-load-dialog']
+            else:
+                # Αν τρέχει ως .py (Προσθέτουμε το __file__ για να ξέρει ποιο script να τρέξει)
+                cmd = [sys.executable, os.path.abspath(__file__), '--run-load-dialog']
+                
+            result = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT).strip()
         except: return
         
         if result == 'CANCEL' or not os.path.exists(result):
@@ -1566,6 +1518,76 @@ echo "ΕΠΙΤΥΧΙΑ! Άνοιξε το results.foam στο ParaView για ν
         try: self.p.close()
         except: pass
 
+# --- ΑΝΕΞΑΡΤΗΤΕΣ ΔΙΕΡΓΑΣΙΕΣ ΔΙΑΛΟΓΩΝ (ΓΙΑ ΝΑ ΜΗΝ ΜΠΛΟΚΑΡΟΥΝ ΤΟ PYVISTA) ---
+
+def isolated_load_dialog():
+    import tkinter as tk
+    from tkinter import filedialog
+    root = tk.Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    file_path = filedialog.askopenfilename(title="Επιλογή State JSON", filetypes=[("JSON files", "*.json")])
+    print(file_path if file_path else 'CANCEL')
+    root.destroy()
+
+def isolated_cfd_dialog(water_speed):
+    import tkinter as tk
+    
+    root = tk.Tk()
+    root.title("River-Monster: Smart CFD Exporter")
+    root.geometry("500x420")
+    root.attributes('-topmost', True)
+    root.configure(bg='#f0f0f0')
+    
+    min_time = round(65.0 / water_speed, 1)
+    dur_var = tk.DoubleVar(value=min_time)
+    fps_var = tk.DoubleVar(value=1.0)
+    size_var = tk.StringVar()
+    
+    def update_size(*args):
+        try:
+            d = float(dur_var.get()); f = float(fps_var.get())
+            size_var.set("Προβλεπόμενος Χώρος Δίσκου: " + str(round((d * f) * 1.0 + 2.0, 1)) + " GB")
+        except:
+            size_var.set("Σφάλμα")
+            
+    dur_var.trace_add('write', update_size)
+    fps_var.trace_add('write', update_size)
+    
+    tk.Label(root, text="Ταχύτητα Νερού: " + str(water_speed) + " m/s", font=('Arial', 12, 'bold'), bg='#f0f0f0').pack(pady=(15,5))
+    tk.Label(root, text="Διάρκεια 6DoF Προσομοίωσης (sec):\n(Προτείνεται " + str(min_time) + "s)", font=('Arial', 10), bg='#f0f0f0').pack(pady=(10,2))
+    tk.Entry(root, textvariable=dur_var, font=('Arial', 14, 'bold'), justify='center', width=10).pack(pady=5)
+    tk.Label(root, text="3D Γραφικά (Frames per Second):", font=('Arial', 10), bg='#f0f0f0').pack(pady=(15,2))
+    tk.Scale(root, variable=fps_var, from_=0.1, to=5.0, resolution=0.1, orient='horizontal', length=300, bg='#f0f0f0').pack(pady=5)
+    tk.Label(root, textvariable=size_var, font=('Arial', 12, 'bold'), fg='red', bg='#f0f0f0').pack(pady=20)
+    
+    def on_submit():
+        print(str(dur_var.get()) + "|" + str(fps_var.get()))
+        root.destroy()
+        
+    def on_cancel():
+        print("CANCEL")
+        root.destroy()
+        
+    tk.Button(root, text="ΕΞΑΓΩΓΗ", command=on_submit, bg='lime', font=('Arial', 12, 'bold'), width=12).pack(side='left', padx=40, pady=10)
+    tk.Button(root, text="ΑΚΥΡΟ", command=on_cancel, bg='lightgray', font=('Arial', 12), width=12).pack(side='right', padx=40, pady=10)
+    
+    update_size()
+    root.mainloop()
+
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
+    
+    # --- ΚΡΥΦΗ ΔΡΟΜΟΛΟΓΗΣΗ ΓΙΑ ΤΟ .EXE ---
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--run-load-dialog':
+            isolated_load_dialog()
+            sys.exit(0)
+        elif sys.argv[1] == '--run-cfd-dialog':
+            water_v = float(sys.argv[2])
+            isolated_cfd_dialog(water_v)
+            sys.exit(0)
+            
+    # --- ΚΑΝΟΝΙΚΗ ΕΚΚΙΝΗΣΗ ΕΦΑΡΜΟΓΗΣ ---
     app = TwinMagnusHAWT_Physics()
     app.run()
